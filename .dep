@@ -1,0 +1,4 @@
+AUTHOR="Robin Bron"
+NAME="keveat"
+DEPS=()
+DEPS+=("cdeps/cc-simple")
