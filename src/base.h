@@ -5,7 +5,7 @@ extern "C" {
 #ifndef H_BASE
 #define H_BASE
 
-
+#define INIT void __attribute__ ((constructor))
 
 #endif // H_BASE
 
