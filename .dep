@@ -2,3 +2,4 @@ AUTHOR="Robin Bron"
 NAME="keveat"
 DEPS=()
 DEPS+=("cdeps/cc-simple")
+DEPS+=("clibs/sha1")
