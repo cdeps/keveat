@@ -61,6 +61,7 @@ void ev_trigger( char *name, void *data ) {
     if(strcmp(name,listener->name)==0) {
       listener->func(name,data,listener->udata);
     }
+    listener=listener->next;
   }
 }
 
