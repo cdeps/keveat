@@ -6,6 +6,8 @@ extern "C" {
 #define H_BASE
 
 #define INIT void __attribute__ ((constructor))
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#define MAX(a,b) (((a)>(b))?(a):(b))
 
 #endif // H_BASE
 
