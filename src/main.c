@@ -12,7 +12,10 @@ extern "C" {
 #include "utc.h"
 
 void exit_after_shutdown( char *name, void *data, void *udata ) {
-  exit(0);
+  if ( data == NULL ) {
+    exit(0);
+  }
+  exit((int)data);
 }
 
 // Shutdown gracefully

@@ -8,6 +8,8 @@ extern "C" {
 #define INIT void __attribute__ ((constructor))
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
+#define SHUTDOWN_SUCCESS ((void*)EXIT_SUCCESS)
+#define SHUTDOWN_FAILURE ((void*)EXIT_FAILURE)
 
 #endif // H_BASE
 
