@@ -4,6 +4,7 @@ extern "C" {
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <signal.h>
 #include <unistd.h>
 
 #include "base.h"
@@ -14,10 +15,20 @@ void exit_after_shutdown( char *name, void *data, void *udata ) {
   exit(0);
 }
 
+// Shutdown gracefully
+void catchSigint( int sig ) {
+  signal(sig, SIG_IGN);
+  printf("\nShutting down\n");
+  ev_trigger( "shutdown", NULL );
+}
+
 int main( int argc, char *argv[] ) {
 
   // First registered = last executed
   ev_on("shutdown", &exit_after_shutdown, NULL);
+
+  // Catch ^C for a graceful shutdown
+  signal( SIGINT, catchSigint );
 
   // These should be registered through INIT functions
   ev_trigger("start", NULL);
