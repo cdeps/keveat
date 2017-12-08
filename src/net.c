@@ -3,6 +3,7 @@ extern "C" {
 #endif
 
 #include <arpa/inet.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,6 +18,9 @@ struct sockaddr_in addr_ext; // For clients
 int sock_int;
 int sock_ext;
 
+net_client *client_list = 0;
+net_node   *node_list   = 0;
+
 // Gracefully shutdown all connections
 void net_shutdown( char *evname, void *evdata, void *udata ) {
 
@@ -24,10 +28,28 @@ void net_shutdown( char *evname, void *evdata, void *udata ) {
 
 void net_tick( char *evname, void *evdata, void *udata ) {
 
+  // Check if a new client has connected
+  net_client *client = calloc(1,sizeof(net_client));
+  socklen_t addr_size = sizeof(struct sockaddr_in);
+  int fd = accept( sock_ext, (struct sockaddr *)&client->addr, &addr_size);
+
+  // Check if we need to register or free
+  if ( fd >= 0 ) {
+    printf("CLIENT!!!\n");
+    client->next = client_list;
+    client->fd   = fd;
+    client_list  = client;
+  } else {
+    free(client);
+  }
+
 }
 
 // Initialize the network
 void net_start( char *evname, void *evdata, void *udata ) {
+
+  // This will be used later
+  int status = 0;
 
   // Listen for events we want
   ev_on( "shutdown", &net_shutdown, NULL );
@@ -47,8 +69,18 @@ void net_start( char *evname, void *evdata, void *udata ) {
 
   // Allow re-use of just-killed sockets
   int optval= 1;
-  setsockopt( sock_int, SOL_SOCKET, SO_REUSEADDR, (const void *)&optval, sizeof(int));
-  setsockopt( sock_ext, SOL_SOCKET, SO_REUSEADDR, (const void *)&optval, sizeof(int));
+  status &= setsockopt( sock_int, SOL_SOCKET, SO_REUSEADDR, (const void *)&optval, sizeof(int));
+  status &= setsockopt( sock_ext, SOL_SOCKET, SO_REUSEADDR, (const void *)&optval, sizeof(int));
+
+  // Check if re-using was allowed
+  if (status) {
+    fprintf(stderr,"Could not set up address re-using\n");
+    ev_trigger("shutdown",SHUTDOWN_FAILURE);
+  }
+
+  // Set both sockets to non-blocking
+  fcntl( sock_int, F_SETFL, O_NONBLOCK );
+  fcntl( sock_ext, F_SETFL, O_NONBLOCK );
 
   // Zero-out our addresses
   memset((char*)&addr_int,0,sizeof(addr_int));
@@ -85,9 +117,6 @@ void net_start( char *evname, void *evdata, void *udata ) {
     fprintf(stderr,"Could not listen on external socket\n");
     ev_trigger("shutdown",SHUTDOWN_FAILURE);
   }
-
-
-  printf("Net doing well so far...\n");
 }
 
 // Register our startup function

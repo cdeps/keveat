@@ -17,6 +17,12 @@ typedef struct {
   unsigned short rtt;        // Round-trip-time (set on pong rx)
 } net_node;
 
+typedef struct {
+  void *next;
+  struct sockaddr_in addr;
+  int fd;
+} net_client;
+
 #endif // H_NET
 
 #ifdef __cplusplus
