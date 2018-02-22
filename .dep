@@ -1,3 +1,4 @@
 AUTHOR="finwo"
 NAME="keveat"
 DEPS=()
+DEPS+=("cdeps/cc-simple")
