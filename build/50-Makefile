@@ -1,0 +1,2 @@
+keveat: $(OBJS)
+	$(CC) $(OBJS) $(CFLAGS) -o $@
