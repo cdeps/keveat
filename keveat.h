@@ -7,16 +7,19 @@ extern "C" {
 
 #include <stdint.h>
 
+#define KEVEAT_FLAG_STAT_MALLOC 1
+
 typedef struct {
   uint64_t size;
+  uint64_t flags;
 } keveat_stat;
 
 typedef struct {
-  void *udata;                                  //                                 // Personal data passed to the functions
-  void (*read)(uint64_t,uint64_t,void*,void*);  // position, length, buffer, udata // Read a bunch of bytes from whatever the adapter handles
-  void (*write)(uint64_t,uint64_t,void*,void*); // position, length, buffer, udata // Write a bunch of bytes to whatever the adapter handles
-  void (*truncate)(uint64_t,void*);             // length, udata                   // Change the size of whatever the adapter handles
-  keveat_stat (*stat)(void*);                   // udata                           // Report info about whatever the adapter handles
+  void *udata;                                      //                                 // Personal data passed to the functions
+  uint64_t (*read)(uint64_t,uint64_t,void*,void*);  // position, length, buffer, udata // Read a bunch of bytes from whatever the adapter handles
+  uint64_t (*write)(uint64_t,uint64_t,void*,void*); // position, length, buffer, udata // Write a bunch of bytes to whatever the adapter handles
+  void (*truncate)(uint64_t,void*);                 // length, udata                   // Change the size of whatever the adapter handles
+  keveat_stat *(*stat)(void*);                      // udata                           // Report info about whatever the adapter handles
 } keveat_adapter;
 
 typedef struct {
@@ -24,6 +27,8 @@ typedef struct {
   uint32_t recsize;        // What size are the records
   uint64_t cpos;           // The current position of the order &  garbage collector
 } keveat_ctx;
+
+keveat_ctx * keveat_init( keveat_adapter *adapter );
 
 #endif // _CDEPS_KEVEAT_H_
 
