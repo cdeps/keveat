@@ -17,20 +17,22 @@ char *kv_memory_data    = 0;
 keveat_adapter *adapter = 0;
 uint64_t size           = 512*1024*1024; // 512 MiB
 
-uint64_t kv_memory_read( uint64_t position, uint64_t length, void *buffer, void *udata ) {
+int64_t kv_memory_read( int64_t position, int64_t length, void *buffer, void *udata ) {
+  printf("READ:\n  POS: %d\n  LEN: %d\n\n", position, length);
   if ( position+length >= size ) { length = size - position; }
   memcpy( buffer, kv_memory_data + position, length );
   return length;
 }
 
-uint64_t kv_memory_write( uint64_t position, uint64_t length, void *buffer, void *udata ) {
+int64_t kv_memory_write( int64_t position, int64_t length, void *buffer, void *udata ) {
+  printf("WRITE:\n  POS: %d\n  LEN: %d\n\n", position, length);
   if ( position+length >= size ) { length = size - position; }
   memcpy( kv_memory_data + position, buffer, length );
   return length;
 }
 
 keveat_stat * kv_memory_stat( void *udata ) {
-  keveat_stat *stat = malloc(sizeof(keveat_stat));
+  keveat_stat *stat = calloc(1,sizeof(keveat_stat));
   stat->size  = size;
   stat->flags = KEVEAT_FLAG_STAT_FREE | KEVEAT_FLAG_ADAPTER_FREE; // Instructions for keveat on how to free us
   return stat;
