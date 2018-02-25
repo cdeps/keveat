@@ -13,4 +13,4 @@ test: $(OBJS)
 
 .PHONY: clean
 clean:
-	$(foreach obj,$(wildcard src/*.o),rm $(obj))
+	$(foreach obj,$(wildcard src/*.o),rm $(obj);)
