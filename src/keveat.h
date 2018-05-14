@@ -2,12 +2,12 @@
 extern "C" {
 #endif
 
-#ifndef _KEVEAT_H_
-#define _KEVEAT_H_
+#ifndef ___KEVEAT_H_
+#define ___KEVEAT_H_
 
 
 
-#endif // _KEVEAT_H_
+#endif // ___KEVEAT_H_
 
 #ifdef __cplusplus
 } // extern "C"
