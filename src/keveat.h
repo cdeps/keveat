@@ -17,12 +17,11 @@ typedef struct {
  * While this creates a new context, it DOES NOT verify if the given file
  * descriptor contains a valid collection.
  *
- * @param {int} fd       File descriptor to operate on
+ * @param {int} fd        File descriptor to operate on
  *
- * @return {keveat_ctx}  The context to pass to later calls
+ * @return {keveat_ctx*}  The context to pass to later calls
  */
 keveat_ctx * keveat_open( int fd );
-
 
 #endif // ___KEVEAT_H_
 
