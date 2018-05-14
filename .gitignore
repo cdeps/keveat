@@ -1,1 +1,6 @@
 /lib
+.zedstate
+/Makefile
+/libkeveat.a
+*.d
+*.o
