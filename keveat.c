@@ -4,10 +4,9 @@ extern "C" {
 
 #include <arpa/inet.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include <stdio.h>
 
 #include "keveat.h"
 
@@ -58,11 +57,33 @@ void keveat_free( keveat_ctx *ctx ) {
 }
 
 uint32_t keveat_read( keveat_ctx *ctx, char *key, void *buffer ) {
-  
   return 0;
 }
 
 uint32_t keveat_write(  keveat_ctx *ctx, char *key, void *buffer, uint32_t length ) {
+  if (!ctx) return 0;
+  if (!ctx->adapter->write) return 0;
+  if ( (8 + strlen(key) + 1 + length) > ctx->recsize ) return 0;
+
+  // TODO: add optimizations
+
+  // Initialize our local buffer
+  char *local_buffer = malloc(ctx->recsize);
+  uint32_t current_length = 0;
+
+  // CLear the last_key, we'll destroy it
+  memset(ctx->last_key,0,ctx->recsize);
+  ctx->last_pos = ctx->recsize;
+
+  // Let's scan the memory
+  for(;;) {
+    ctx->adapter->read
+    break;
+  }
+
+
+
+  printf("I need to write...\n");
   return 0;
 }
 

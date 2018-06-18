@@ -17,15 +17,17 @@ char *kv_memory_data    = 0;
 keveat_adapter *adapter = 0;
 uint64_t size           = 512*1024*1024; // 512 MiB
 
-int64_t kv_memory_read( int64_t position, int64_t length, void *buffer, void *udata ) {
-  printf("READ:\n  POS: %d\n  LEN: %d\n\n", position, length);
+uint64_t kv_memory_read( uint64_t position, uint64_t length, void *buffer, void *udata ) {
+  printf("READ:\n  POS: 0x%.16x\n  LEN: 0x%.16x\n\n", position, length);
+  if ( !kv_memory_data ) return 0;
   if ( position+length >= size ) { length = size - position; }
   memcpy( buffer, kv_memory_data + position, length );
   return length;
 }
 
-int64_t kv_memory_write( int64_t position, int64_t length, void *buffer, void *udata ) {
-  printf("WRITE:\n  POS: %d\n  LEN: %d\n\n", position, length);
+uint64_t kv_memory_write( uint64_t position, uint64_t length, void *buffer, void *udata ) {
+  printf("WRITE:\n  POS: %.8x\n  LEN: %.8x\n\n", position, length);
+  if ( !kv_memory_data ) return 0;
   if ( position+length >= size ) { length = size - position; }
   memcpy( kv_memory_data + position, buffer, length );
   return length;
@@ -39,7 +41,8 @@ keveat_stat * kv_memory_stat( void *udata ) {
 }
 
 void kv_memory_close( void *udata ) {
-
+  free(kv_memory_data);
+  kv_memory_data = 0;
 }
 
 keveat_adapter * memory_adapter() {

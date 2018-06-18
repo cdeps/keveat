@@ -23,20 +23,12 @@ int main() {
   if ( keveat_write( kv, "000", tmpbuf, strlen(tmpbuf)+1) != strlen(tmpbuf)+1 ) {
     printf("Writing did not return the correct written bytes\n");
   }
-
-  
-
-
   if ( keveat_write( kv, "001", tmpbuf, strlen(tmpbuf)+1) != strlen(tmpbuf)+1 ) {
     printf("Writing did not return the correct written bytes\n");
   }
   if ( keveat_write( kv, "002", tmpbuf, strlen(tmpbuf)+1) != strlen(tmpbuf)+1 ) {
     printf("Writing did not return the correct written bytes\n");
   }
-
-
-
-
 
   // Read a test key
 

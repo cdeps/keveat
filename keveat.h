@@ -16,24 +16,30 @@ typedef struct {
 } keveat_stat;
 
 typedef struct {
-  void *udata;                                   //                                 // Personal data passed to the functions
-  int64_t (*read)(int64_t,int64_t,void*,void*);  // position, length, buffer, udata // Read a bunch of bytes from whatever the adapter handles
-  int64_t (*write)(int64_t,int64_t,void*,void*); // position, length, buffer, udata // Write a bunch of bytes to whatever the adapter handles
-  void (*truncate)(int64_t,void*);               // length, udata                   // Change the size of whatever the adapter handles
-  keveat_stat *(*stat)(void*);                   // udata                           // Report info about whatever the adapter handles
-  void (*close)(void*);                          // udata                           // DO whatever needs to be done to finishd
+  void *udata;                                      //                                 // Personal data passed to the functions
+  uint64_t (*read)(uint64_t,uint64_t,void*,void*);  // position, length, buffer, udata // Read a bunch of bytes from whatever the adapter handles
+  uint64_t (*write)(uint64_t,uint64_t,void*,void*); // position, length, buffer, udata // Write a bunch of bytes to whatever the adapter handles
+  void (*truncate)(uint64_t,void*);                 // length, udata                   // Change the size of whatever the adapter handles
+  keveat_stat *(*stat)(void*);                      // udata                           // Report info about whatever the adapter handles
+  void (*close)(void*);                             // udata                           // DO whatever needs to be done to finishd
 } keveat_adapter;
 
 typedef struct {
   keveat_adapter *adapter; // How to perform IO
   keveat_stat *stat;
   uint32_t recsize;        // What size are the records
-  int64_t last_pos;        // The most recent position read
+  uint64_t last_pos;       // The most recent position read
   char *last_key;          // The key of the most recent read
   int64_t end_pos;
-  int64_t gc_left;         // GC left index
-  int64_t gc_right;        // GC right index
 } keveat_ctx;
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+ * How a record looks like                                 *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * 4 bytes    size    Size of the current record in bytes  *
+ * n bytes    key     Key of the current record            *
+ * n bytes    data    The raw data                         *
+\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 keveat_ctx * keveat_init( keveat_adapter *adapter );
 void keveat_free( keveat_ctx *ctx );
